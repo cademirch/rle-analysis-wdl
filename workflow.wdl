@@ -19,7 +19,7 @@ workflow align{
             input:
                 referenceFile = referenceFile,
                 queryFile = queryFile,
-                outputPrefix = basename(queryFile, ".fastq"),
+                outputPrefix = runName,
                 presetOption = "map-ont",
                 outputSam = true
         }
