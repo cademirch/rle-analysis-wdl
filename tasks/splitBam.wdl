@@ -5,7 +5,7 @@ task splitBamToFasta {
         File inputBam
         File inputBamIndex
         String label # for labelling output as train or test
-        String outputFilePath = basename(inputBam, ".sorted.bam") + "." + label + ".fasta"
+        String outputFilePath = basename(inputBam, ".sorted.bam") + "_" + label + ".fasta"
         String region
 
         Int memoryPerThreadGb = 4

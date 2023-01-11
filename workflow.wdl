@@ -8,66 +8,69 @@ import "tasks/shasta.wdl" as shasta
 workflow align{
     input {
         File referenceFile
-        File queryFile
+        Array[File] queryFiles
+        
+        String testChroms = "chr1" # space delimited list of chromosomes for test set
+        String trainChroms = "chr2" # space delimited list of chromosomes for train set
+    }
+    scatter (queryFile in queryFiles) {
         String runName = basename(queryFile, ".fastq") # name of run to be used downstream
-        String testChroms = "PR.57.5.398.0" # space delimited list of chromosomes for test set
-        String trainChroms = "PR.57.5.398.1" # space delimited list of chromosomes for train set
-    }
+        call minimap2.Mapping {
+            input:
+                referenceFile = referenceFile,
+                queryFile = queryFile,
+                outputPrefix = basename(queryFile, ".fastq"),
+                presetOption = "map-ont",
+                outputSam = true
+        }
 
-    call minimap2.Mapping {
-        input:
-            referenceFile = referenceFile,
-            queryFile = queryFile,
-            outputPrefix = basename(queryFile, ".fastq"),
-            presetOption = "map-ont",
-            outputSam = true
-    }
+        call samtools.Sort {
+            input:
+                inputBam = Mapping.alignmentFile,           
+        }
 
-    call samtools.Sort {
-        input:
-            inputBam = Mapping.alignmentFile,           
-    }
+        call sp.splitBamToFasta as testFasta{
+            input:
+                inputBam = Sort.outputBam,
+                inputBamIndex = Sort.outputBamIndex,
+                label = "test",
+                region = testChroms
+        }
 
-    call sp.splitBamToFasta as testFasta{
-        input:
-            inputBam = Sort.outputBam,
-            inputBamIndex = Sort.outputBamIndex,
-            label = "test",
-            region = testChroms
-    }
+        call sp.splitBamToFasta as trainFasta{
+            input:
+                inputBam = Sort.outputBam,
+                inputBamIndex = Sort.outputBamIndex,
+                label = "train",
+                region = trainChroms
+        }
 
-    call sp.splitBamToFasta as trainFasta{
-        input:
-            inputBam = Sort.outputBam,
-            inputBamIndex = Sort.outputBamIndex,
-            label = "train",
-            region = trainChroms
-    }
+        call rle.measure_runlength_dist as measureRLE{
+            input:
+                ref = referenceFile,
+                seqs = trainFasta.outputFasta,
+                
+        }
+        
+        call rle.convert_matrix_shasta_config as convertMatrix{
+            input:
+                distFile = measureRLE.distFile,
+                name = runName
+        }
 
-    call rle.measure_runlength_dist as mrd{
-        input:
-            ref = referenceFile,
-            seqs = trainFasta.outputFasta,
-            
-    }
+        call shasta.shasta as shastaAssemble {
+            input:
+                inFasta = testFasta.outputFasta,
+                distConf = convertMatrix.configFile,
+                assemblyDirectory = runName + "_assembly"
+        }
 
-    call rle.convert_matrix_shasta_config as cmsc{
-        input:
-            distFile = mrd.distFile,
-            name = runName
     }
-
-    call shasta.shasta as sh {
-        input:
-            inFasta = testFasta.outputFasta,
-            distConf = cmsc.configFile,
-            assemblyDirectory = "assembly_out"
-    }
+    call rle.plot_matrix as plot{
+            input:
+                distFiles = measureRLE.distFile,
+                labels = runName
+        }
     
-    output {
-        File distFile = mrd.distFile
-        File shastaConfig = cmsc.configFile
-        File assembly = sh.assembly
-    }
-
+    
 }

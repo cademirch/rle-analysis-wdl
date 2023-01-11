@@ -77,3 +77,33 @@ task convert_matrix_shasta_config {
         docker: dockerImage
     }
 }
+
+task plot_matrix {
+    input {
+        Array[File] distFiles
+        Array[String] labels
+        
+        Int memoryPerThreadGb = 4
+        Int threads = 1
+        Int memoryGb = 1 + threads * memoryPerThreadGb
+        Int timeMinutes = 1 + ceil(size(distFiles, "GiB") * 3)
+        String dockerImage = "docker.io/cademirch/rle-analysis:latest"
+
+    }
+
+    command {
+        set -e
+        python3 /workdir/scripts/plot_matrix.py --paths ${sep=" " distFiles} --labels ${sep=" " labels}
+    }
+
+    output {
+        File png = "rle.png"
+    }
+
+    runtime {
+        cpu: threads
+        memory: "~{memoryGb}GiB"
+        time_minutes: timeMinutes
+        docker: dockerImage
+    }
+}
