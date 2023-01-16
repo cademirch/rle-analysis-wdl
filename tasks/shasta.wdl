@@ -3,7 +3,8 @@ version 1.0
 task shasta {
     input {
         File inFasta
-        File distConf
+        File bayesianConfigFile = ""
+        String consensusCallerMode
         String assemblyDirectory
         String config = "Nanopore-May2022"
         String memoryMode ="anonymous"
@@ -11,6 +12,8 @@ task shasta {
 
         
         String dockerImage = "docker.io/cademirch/shasta:latest"
+        Int cores = 4
+        String memory = "30GiB"
     }
     command {
         set -e
@@ -20,7 +23,7 @@ task shasta {
         --memoryMode ~{memoryMode} \
         --memoryBacking ~{memoryBacking} \
         --assemblyDirectory ~{assemblyDirectory} \
-        --Assembly.consensusCaller Bayesian:~{distConf}
+        --Assembly.consensusCaller ~{consensusCallerMode}~{bayesianConfigFile}
     }
 
     output {
@@ -28,6 +31,8 @@ task shasta {
     }
 
     runtime {
+        cpu: cores
+        memory: memory
         docker: dockerImage
     }
 

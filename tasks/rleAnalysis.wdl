@@ -78,7 +78,7 @@ task convert_matrix_shasta_config {
     }
 }
 
-task plot_matrix {
+task plot {
     input {
         Array[File] distFiles
         Array[String] labels
