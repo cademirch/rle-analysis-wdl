@@ -16,7 +16,7 @@ workflow align{
         String trainChroms = "S1 S2 S3 S4 S5 S7 S8 S9 S10 S11 S12 S13 S14 S15 S17 S18 S19 S20 S21 S22 SX SY" # space delimited list of chromosomes for train set
     }
     
-    call mm2.Mapping {
+    call mm2.Mapping as map{
         input:
             referenceFile = referenceFile,
             queryFile = queryFiles,
@@ -25,23 +25,23 @@ workflow align{
             outputSam = true
     }
 
-    call samtools.Sort {
+    call samtools.Sort as sort{
         input:
-            inputBam = Mapping.alignmentFile,           
+            inputBam = map.alignmentFile,           
     }
 
     call sp.splitBamToFasta as testFasta{
         input:
-            inputBam = Sort.outputBam,
-            inputBamIndex = Sort.outputBamIndex,
+            inputBam = sort.outputBam,
+            inputBamIndex = sort.outputBamIndex,
             label = "test",
             region = testChroms
     }
 
     call sp.splitBamToFasta as trainFasta{
         input:
-            inputBam = Sort.outputBam,
-            inputBamIndex = Sort.outputBamIndex,
+            inputBam = sort.outputBam,
+            inputBamIndex = sort.outputBamIndex,
             label = "train",
             region = trainChroms
     }
