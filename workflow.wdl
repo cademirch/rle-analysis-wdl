@@ -27,7 +27,8 @@ workflow align{
 
     call samtools.Sort as sort{
         input:
-            inputBam = map.alignmentFile,           
+            inputBam = map.alignmentFile,
+            outputPath = basename(map.alignmentFile, "\.bam") + ".sorted.bam"           
     }
 
     call sp.splitBamToFasta as testFasta{
