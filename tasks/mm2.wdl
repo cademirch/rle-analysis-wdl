@@ -78,7 +78,7 @@ task Mapping {
         howToFindGTAG: {description: "How to find GT-AG. f:transcript strand, b:both strands, n:don't match GT-AG.", category: "common"}
         cores: {description: "The number of cores to be used.", category: "advanced"}
         memory: {description: "The amount of memory available to the job.", category: "advanced"}
-        timeMinutes: {description: "The maximum amount of time the job will run in minutes.", category: "advanced"}
+        
         dockerImage: {description: "The docker image used for this task. Changing this may result in errors which the developers may choose not to address.", category: "advanced"}
 
         # outputs
