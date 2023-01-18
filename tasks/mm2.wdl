@@ -4,7 +4,7 @@ version 1.0
 task Mapping {
     input {
         String presetOption
-        Int kmerSize = 15
+        Int kmerSize = 17
         Boolean skipSelfAndDualMappings = false
         Boolean outputSam = false
         String outputPrefix
@@ -32,6 +32,10 @@ task Mapping {
         minimap2 \
         -x ~{presetOption} \
         -k ~{kmerSize} \
+        -n 10 \
+        -K 4g \
+        -I 8g \
+        --cap-kalloc=2000m \
         ~{true="-X" false="" skipSelfAndDualMappings} \
         ~{true="-a" false="" outputSam} \
         -o ~{outputPrefix} \

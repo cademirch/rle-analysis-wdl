@@ -21,7 +21,8 @@ workflow align{
             queryFile = queryFiles,
             outputPrefix = runName,
             presetOption = "map-ont",
-            outputSam = true
+            outputSam = true,
+            secondaryAlignment = false
     }
 
     call samtools.Sort as sort{
