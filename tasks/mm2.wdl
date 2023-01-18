@@ -23,7 +23,7 @@ task Mapping {
         Int cores = 4
         String memory = "30GiB"
         String disks = "local-disk 500 SSD"
-        String dockerImage = "quay.io/biocontainers/minimap2:2.20--h5bf99c6_0"
+        String dockerImage = "docker.io/staphb/minimap2:latest"
     }
 
     command {
