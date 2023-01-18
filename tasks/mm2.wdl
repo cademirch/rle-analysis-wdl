@@ -22,7 +22,7 @@ task Mapping {
 
         Int cores = 4
         String memory = "30GiB"
-        Int timeMinutes = 1 + ceil(size(queryFile, "G") * 200 / cores)
+        String disks = "local-disk 500 SSD"
         String dockerImage = "quay.io/biocontainers/minimap2:2.20--h5bf99c6_0"
     }
 
@@ -55,7 +55,7 @@ task Mapping {
     runtime {
         cpu: cores
         memory: memory
-        time_minutes: timeMinutes
+        disks: disks
         docker: dockerImage
     }
 

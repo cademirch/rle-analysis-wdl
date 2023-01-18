@@ -9,7 +9,7 @@ task measure_runlength_dist {
         Int memoryPerThreadGb = 4
         Int threads = 1
         Int memoryGb = 1 + threads * memoryPerThreadGb
-        Int timeMinutes = 1 + ceil(size(seqs, "GiB") * 3)
+        String disks = "local-disk 500 SSD"
         String dockerImage = "docker.io/cademirch/rle-analysis:latest"
 
     }
@@ -33,7 +33,7 @@ task measure_runlength_dist {
     runtime {
         cpu: threads
         memory: "~{memoryGb}GiB"
-        time_minutes: timeMinutes
+        disks: disks
         docker: dockerImage
     }
 }

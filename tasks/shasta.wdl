@@ -14,6 +14,7 @@ task shasta {
         String dockerImage = "docker.io/cademirch/shasta:latest"
         Int cores = 4
         String memory = "30GiB"
+        String disks = "local-disk 500 SSD"
     }
     command {
         set -e
@@ -33,6 +34,7 @@ task shasta {
     runtime {
         cpu: cores
         memory: memory
+        disks: disks
         docker: dockerImage
     }
 

@@ -11,7 +11,7 @@ task splitBamToFasta {
         Int memoryPerThreadGb = 4
         Int threads = 1
         Int memoryGb = 1 + threads * memoryPerThreadGb
-        Int timeMinutes = 1 + ceil(size(inputBam, "GiB") * 3)
+        String disks = "local-disk 500 SSD"
         String dockerImage = "quay.io/biocontainers/samtools:1.11--h6270b1f_0"
     }
 
@@ -30,7 +30,7 @@ task splitBamToFasta {
     runtime {
         cpu: threads
         memory: "~{memoryGb}GiB"
-        time_minutes: timeMinutes
+        disks: disks
         docker: dockerImage
     }
 }

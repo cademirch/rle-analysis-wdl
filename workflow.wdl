@@ -1,11 +1,10 @@
 version 1.0
-import "https://raw.githubusercontent.com/biowdl/tasks/develop/minimap2.wdl" as minimap2
-import "https://raw.githubusercontent.com/biowdl/tasks/develop/samtools.wdl" as samtools
 import "tasks/splitBam.wdl" as sp
 import "tasks/rleAnalysis.wdl" as rle
 import "tasks/shasta.wdl" as shasta
 import "tasks/mm2.wdl" as mm2
 import "tasks/quast.wdl" as quast
+import "tasks/samtools.wdl" as samtools
 
 workflow align{
     input {

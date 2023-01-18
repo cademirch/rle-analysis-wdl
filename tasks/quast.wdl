@@ -10,6 +10,7 @@ task quast {
         
         String dockerImage = "docker.io/cademirch/quast:latest"
         Int cores = 4
+        String disks = "local-disk 500 SSD"
         String memory = "30GiB"
     }
 
@@ -30,6 +31,7 @@ task quast {
     runtime {
         cpu: cores
         memory: memory
+        disks: disks
         docker: dockerImage
     }
 
