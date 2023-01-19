@@ -3,7 +3,7 @@ version 1.0
 task shasta {
     input {
         File inFasta
-        File bayesianConfigFile = ""
+        File? bayesianConfigFile
         String consensusCallerMode
         String assemblyDirectory
         String config = "Nanopore-May2022"
