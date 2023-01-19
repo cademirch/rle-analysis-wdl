@@ -5,7 +5,7 @@ task measure_runlength_dist {
         File ref
         File seqs
         String outputPrefix = basename(seqs, ".fasta")
-        String refGunzipped = basename(ref, ".gz")
+        String refGunzipped = sub(ref, ".gz", "")
         Int memoryPerThreadGb = 4
         Int threads = 1
         Int memoryGb = 1 + threads * memoryPerThreadGb
@@ -23,7 +23,7 @@ task measure_runlength_dist {
             --max_threads 92 \
             --minimum_match_length 11 \
             --output_dir ~{outputPrefix} \
-            --ref ~{refGunzipped} \
+            --ref ~{ref} \
             --sequences ~{seqs}
     }
 
