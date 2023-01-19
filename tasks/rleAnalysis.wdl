@@ -17,7 +17,7 @@ task measure_runlength_dist {
     command {
         set -e
         mkdir -p "$(dirname ~{outputPrefix})"
-        gunzip ~{ref}
+        gunzip ~{ref} && \
         measure_runlength_distribution_from_fasta \
             --minimap_preset map-ont \
             --max_threads 92 \
