@@ -23,7 +23,7 @@ task measure_runlength_dist {
             --max_threads 92 \
             --minimum_match_length 11 \
             --output_dir ~{outputPrefix} \
-            --ref ~{ref} \
+            --ref ~{refGunzipped} \
             --sequences ~{seqs}
     }
 
